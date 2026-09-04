@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { getAdminSession } from "@/lib/session";
 import { createProduct, deleteProduct, saveProductImage } from "@/lib/products";
+import { CATEGORIES, type Category } from "@/lib/site-config";
 
 export type ProductFormState = { error?: string } | undefined;
 
@@ -21,6 +22,7 @@ export async function createProductAction(
 
   const nome = formData.get("nome");
   const precoRaw = formData.get("preco");
+  const categoriaRaw = formData.get("categoria");
   const descricao = formData.get("descricao");
   const imagem = formData.get("imagem");
 
@@ -32,6 +34,14 @@ export async function createProductAction(
   if (!precoRaw || Number.isNaN(preco) || preco <= 0) {
     return { error: "Informe um preço válido." };
   }
+
+  if (
+    typeof categoriaRaw !== "string" ||
+    !CATEGORIES.includes(categoriaRaw as Category)
+  ) {
+    return { error: "Selecione uma categoria válida." };
+  }
+  const categoria = categoriaRaw as Category;
 
   if (!(imagem instanceof File) || imagem.size === 0) {
     return { error: "Selecione uma imagem para a peça." };
@@ -49,6 +59,7 @@ export async function createProductAction(
   await createProduct({
     nome: nome.trim(),
     preco,
+    categoria,
     descricao:
       typeof descricao === "string" && descricao.trim()
         ? descricao.trim()

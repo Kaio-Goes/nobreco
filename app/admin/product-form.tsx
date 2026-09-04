@@ -2,6 +2,7 @@
 
 import { useActionState } from "react";
 import { createProductAction } from "@/app/actions/products";
+import { CATEGORIES } from "@/lib/site-config";
 
 export default function ProductForm() {
   const [state, formAction, pending] = useActionState(
@@ -41,6 +42,31 @@ export default function ProductForm() {
           required
           className="rounded-md border border-preto/20 bg-white px-3 py-2 text-preto outline-none focus:border-bordo"
         />
+      </div>
+
+      <div className="flex flex-col gap-1.5">
+        <label
+          htmlFor="categoria"
+          className="text-sm font-medium text-preto/80"
+        >
+          Categoria
+        </label>
+        <select
+          id="categoria"
+          name="categoria"
+          required
+          defaultValue=""
+          className="rounded-md border border-preto/20 bg-white px-3 py-2 text-preto outline-none focus:border-bordo"
+        >
+          <option value="" disabled>
+            Selecione...
+          </option>
+          {CATEGORIES.map((categoria) => (
+            <option key={categoria} value={categoria}>
+              {categoria}
+            </option>
+          ))}
+        </select>
       </div>
 
       <div className="flex flex-col gap-1.5">

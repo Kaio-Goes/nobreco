@@ -1,11 +1,13 @@
 import "server-only";
 import fs from "node:fs/promises";
 import path from "node:path";
+import type { Category } from "@/lib/site-config";
 
 export type Product = {
   id: string;
   nome: string;
   preco: number; // valor em reais
+  categoria: Category;
   descricao?: string;
   imagem: string; // caminho público, ex: /produtos/arquivo.png
   criadoEm: string; // ISO date
@@ -68,6 +70,7 @@ export async function saveProductImage(file: File): Promise<string> {
 export type CreateProductInput = {
   nome: string;
   preco: number;
+  categoria: Category;
   descricao?: string;
   imagem: string;
 };
@@ -81,6 +84,7 @@ export async function createProduct(
     id: crypto.randomUUID(),
     nome: input.nome,
     preco: input.preco,
+    categoria: input.categoria,
     descricao: input.descricao,
     imagem: input.imagem,
     criadoEm: new Date().toISOString(),

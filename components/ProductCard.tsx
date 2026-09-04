@@ -1,15 +1,17 @@
+"use client";
+
 import Image from "next/image";
 import type { Product } from "@/lib/products";
+import { formatPrice, formatInstallment } from "@/lib/format";
+import { useFavorites } from "@/lib/use-favorites";
 import BuyDialog from "./BuyDialog";
-
-function formatPrice(preco: number) {
-  return preco.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
-}
 
 export default function ProductCard({
   product,
 }: Readonly<{ product: Product }>) {
   const preco = formatPrice(product.preco);
+  const { isFavorite, toggleFavorite } = useFavorites();
+  const favorito = isFavorite(product.id);
 
   return (
     <div className="group flex flex-col overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-preto/5 transition-shadow duration-300 hover:shadow-lg">
@@ -21,9 +23,36 @@ export default function ProductCard({
           className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
           sizes="(min-width: 1024px) 25vw, (min-width: 640px) 33vw, 50vw"
         />
+
+        <button
+          type="button"
+          onClick={() => toggleFavorite(product.id)}
+          aria-label={
+            favorito ? "Remover dos favoritos" : "Adicionar aos favoritos"
+          }
+          className="absolute right-2.5 top-2.5 flex h-8 w-8 items-center justify-center rounded-full bg-white/90 text-preto shadow-sm transition-colors hover:bg-white"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill={favorito ? "currentColor" : "none"}
+            stroke="currentColor"
+            strokeWidth={1.8}
+            className={`h-4 w-4 ${favorito ? "text-bordo" : ""}`}
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"
+            />
+          </svg>
+        </button>
       </div>
 
       <div className="flex flex-1 flex-col gap-1.5 p-4">
+        <span className="text-[11px] uppercase tracking-wide text-preto/40">
+          {product.categoria}
+        </span>
         <h3 className="text-sm font-medium uppercase tracking-wide text-preto">
           {product.nome}
         </h3>
@@ -32,7 +61,15 @@ export default function ProductCard({
             {product.descricao}
           </p>
         )}
-        <span className="text-lg font-semibold text-bordo">{preco}</span>
+
+        <div className="flex flex-col">
+          <span className="text-lg font-semibold text-bordo">
+            {preco} no Pix
+          </span>
+          <span className="text-xs text-preto/50">
+            ou {formatInstallment(product.preco)}
+          </span>
+        </div>
 
         <div className="mt-auto pt-3">
           <BuyDialog productName={product.nome} productPrice={preco} />

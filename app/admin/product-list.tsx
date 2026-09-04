@@ -1,10 +1,7 @@
 import Image from "next/image";
 import type { Product } from "@/lib/products";
 import { deleteProductAction } from "@/app/actions/products";
-
-function formatPrice(preco: number) {
-  return preco.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
-}
+import { formatPrice } from "@/lib/format";
 
 export default function ProductList({
   products,
@@ -31,6 +28,9 @@ export default function ProductList({
 
           <div className="flex flex-1 flex-col">
             <span className="font-medium text-preto">{product.nome}</span>
+            <span className="text-xs uppercase tracking-wide text-preto/40">
+              {product.categoria}
+            </span>
             <span className="text-sm text-marrom">
               {formatPrice(product.preco)}
             </span>

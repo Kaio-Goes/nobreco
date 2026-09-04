@@ -3,13 +3,10 @@ import ProductCard from "./ProductCard";
 
 export default function ProductGrid({
   products,
-}: Readonly<{ products: Product[] }>) {
+  emptyMessage = "Em breve, novas peças por aqui.",
+}: Readonly<{ products: Product[]; emptyMessage?: string }>) {
   if (products.length === 0) {
-    return (
-      <p className="py-16 text-center text-preto/50">
-        Em breve, novas peças por aqui.
-      </p>
-    );
+    return <p className="py-16 text-center text-preto/50">{emptyMessage}</p>;
   }
 
   return (
