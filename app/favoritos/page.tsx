@@ -1,4 +1,3 @@
-import TopBar from "@/components/TopBar";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import FavoritesList from "@/components/FavoritesList";
@@ -11,7 +10,6 @@ export default async function FavoritosPage() {
 
   return (
     <div className="flex flex-1 flex-col bg-off-white">
-      <TopBar />
       <Header />
 
       <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-6 px-6 py-10">

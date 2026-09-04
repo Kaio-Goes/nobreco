@@ -1,5 +1,4 @@
 import { Suspense } from "react";
-import TopBar from "@/components/TopBar";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import HeroCarousel from "@/components/HeroCarousel";
@@ -52,7 +51,6 @@ export default async function Home({
 
   return (
     <div className="flex flex-1 flex-col bg-off-white">
-      <TopBar />
       <Header initialQuery={busca} activeCategories={activeCategories} />
 
       <HeroCarousel />

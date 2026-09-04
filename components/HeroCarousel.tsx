@@ -23,7 +23,7 @@ export default function HeroCarousel() {
 
   return (
     // aspect-video casa com a proporção real das imagens (1920x1080), evitando corte/distorção
-    <div className="group relative mx-auto aspect-video w-full max-w-[1600px] overflow-hidden bg-preto">
+    <div className="group relative w-full aspect-video overflow-hidden bg-preto">
       {SLIDES.map((slide, i) => (
         <Image
           key={slide.src}
@@ -31,7 +31,7 @@ export default function HeroCarousel() {
           alt={slide.alt}
           fill
           priority={i === 0}
-          sizes="(min-width: 1600px) 1600px, 100vw"
+          sizes="100vw"
           className={`object-cover transition-all duration-1000 ease-out ${
             i === index ? "scale-100 opacity-100" : "scale-105 opacity-0"
           }`}
