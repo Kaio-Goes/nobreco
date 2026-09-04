@@ -1,13 +1,61 @@
 "use client";
 
-import { useActionState } from "react";
-import { login } from "@/app/actions/auth";
+import { useState, useTransition } from "react";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { firebaseAuth } from "@/lib/firebase-client";
+import { loginWithFirebase } from "@/app/actions/auth";
 
 export default function LoginForm() {
-  const [state, formAction, pending] = useActionState(login, undefined);
+  const [email, setEmail] = useState("");
+  const [senha, setSenha] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [pending, startTransition] = useTransition();
+
+  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setError(null);
+
+    startTransition(async () => {
+      try {
+        const credential = await signInWithEmailAndPassword(
+          firebaseAuth,
+          email,
+          senha,
+        );
+        const idToken = await credential.user.getIdToken();
+        const result = await loginWithFirebase(idToken);
+        if (result?.error) {
+          setError(result.error);
+        }
+      } catch {
+        setError("E-mail ou senha inválidos.");
+      }
+    });
+  }
 
   return (
-    <form action={formAction} className="flex w-full max-w-sm flex-col gap-4">
+    <form
+      onSubmit={handleSubmit}
+      className="flex w-full max-w-sm flex-col gap-4"
+    >
+      <div className="flex flex-col gap-1.5">
+        <label
+          htmlFor="email"
+          className="text-sm font-medium text-off-white/80"
+        >
+          E-mail
+        </label>
+        <input
+          id="email"
+          type="email"
+          required
+          autoFocus
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className="rounded-md border border-off-white/20 bg-transparent px-3 py-2 text-off-white outline-none focus:border-off-white/60"
+        />
+      </div>
+
       <div className="flex flex-col gap-1.5">
         <label
           htmlFor="senha"
@@ -17,15 +65,15 @@ export default function LoginForm() {
         </label>
         <input
           id="senha"
-          name="senha"
           type="password"
           required
-          autoFocus
+          value={senha}
+          onChange={(e) => setSenha(e.target.value)}
           className="rounded-md border border-off-white/20 bg-transparent px-3 py-2 text-off-white outline-none focus:border-off-white/60"
         />
       </div>
 
-      {state?.error && <p className="text-sm text-red-400">{state.error}</p>}
+      {error && <p className="text-sm text-red-400">{error}</p>}
 
       <button
         type="submit"

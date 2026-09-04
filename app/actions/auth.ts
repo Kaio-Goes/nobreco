@@ -2,21 +2,22 @@
 
 import { redirect } from "next/navigation";
 import { createAdminSession, deleteAdminSession } from "@/lib/session";
+import { verifyFirebaseIdToken } from "@/lib/firebase-verify";
 
 export type LoginState = { error?: string } | undefined;
 
-export async function login(
-  _state: LoginState,
-  formData: FormData,
-): Promise<LoginState> {
-  const senha = formData.get("senha");
-
-  if (typeof senha !== "string" || senha.length === 0) {
-    return { error: "Informe a senha." };
+export async function loginWithFirebase(idToken: string): Promise<LoginState> {
+  let email: string;
+  try {
+    const payload = await verifyFirebaseIdToken(idToken);
+    email = payload.email;
+  } catch {
+    return { error: "Não foi possível validar seu login. Tente novamente." };
   }
 
-  if (senha !== process.env.ADMIN_PASSWORD) {
-    return { error: "Senha incorreta." };
+  const allowedEmail = process.env.ADMIN_EMAIL?.toLowerCase();
+  if (!allowedEmail || email.toLowerCase() !== allowedEmail) {
+    return { error: "Usuário não autorizado." };
   }
 
   await createAdminSession();
