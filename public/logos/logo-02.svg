@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Camada_1" data-name="Camada 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000">
+  <defs>
+    <style>
+      .cls-1 {
+        font-family: Georgia-Bold, Georgia;
+        font-size: 159.68px;
+        font-weight: 700;
+      }
+
+      .cls-2 {
+        font-family: Georgia-Italic, Georgia;
+        font-size: 21.49px;
+        font-style: italic;
+        letter-spacing: .2em;
+      }
+
+      .cls-3 {
+        fill: none;
+        stroke: #000;
+        stroke-miterlimit: 10;
+        stroke-width: 2px;
+      }
+    </style>
+  </defs>
+  <rect x="745.82" y="471.53" width="30.33" height="30.33" transform="translate(-121.26 680.65) rotate(-45)"/>
+  <text class="cls-1" transform="translate(74.29 543.37)"><tspan x="0" y="0">NOBRE</tspan></text>
+  <text class="cls-2" transform="translate(669.82 580.18)"><tspan x="0" y="0">MODA MASCULINA</tspan></text>
+  <line class="cls-3" x1="760.98" y1="432.35" x2="760.98" y2="455.66"/>
+  <line class="cls-3" x1="760.98" y1="517.73" x2="760.98" y2="543.37"/>
+</svg>
