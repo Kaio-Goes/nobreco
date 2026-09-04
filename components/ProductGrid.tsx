@@ -1,7 +1,9 @@
 import type { Product } from "@/lib/products";
 import ProductCard from "./ProductCard";
 
-export default function ProductGrid({ products }: Readonly<{ products: Product[] }>) {
+export default function ProductGrid({
+  products,
+}: Readonly<{ products: Product[] }>) {
   if (products.length === 0) {
     return (
       <p className="py-16 text-center text-preto/50">

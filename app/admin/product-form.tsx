@@ -4,7 +4,10 @@ import { useActionState } from "react";
 import { createProductAction } from "@/app/actions/products";
 
 export default function ProductForm() {
-  const [state, formAction, pending] = useActionState(createProductAction, undefined);
+  const [state, formAction, pending] = useActionState(
+    createProductAction,
+    undefined,
+  );
 
   return (
     <form
@@ -41,7 +44,10 @@ export default function ProductForm() {
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <label htmlFor="descricao" className="text-sm font-medium text-preto/80">
+        <label
+          htmlFor="descricao"
+          className="text-sm font-medium text-preto/80"
+        >
           Descrição (opcional)
         </label>
         <textarea

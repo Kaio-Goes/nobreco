@@ -6,7 +6,9 @@ function formatPrice(preco: number) {
   return preco.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 }
 
-export default function ProductCard({ product }: Readonly<{ product: Product }>) {
+export default function ProductCard({
+  product,
+}: Readonly<{ product: Product }>) {
   const preco = formatPrice(product.preco);
 
   return (
@@ -24,7 +26,9 @@ export default function ProductCard({ product }: Readonly<{ product: Product }>)
       <div className="flex flex-1 flex-col gap-2 p-4">
         <h3 className="font-medium text-preto">{product.nome}</h3>
         {product.descricao && (
-          <p className="line-clamp-2 text-sm text-preto/60">{product.descricao}</p>
+          <p className="line-clamp-2 text-sm text-preto/60">
+            {product.descricao}
+          </p>
         )}
         <span className="text-lg font-semibold text-marrom">{preco}</span>
 

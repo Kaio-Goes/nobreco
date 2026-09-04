@@ -41,13 +41,18 @@ export async function createProductAction(
   try {
     imagemPath = await saveProductImage(imagem);
   } catch (err) {
-    return { error: err instanceof Error ? err.message : "Falha ao salvar a imagem." };
+    return {
+      error: err instanceof Error ? err.message : "Falha ao salvar a imagem.",
+    };
   }
 
   await createProduct({
     nome: nome.trim(),
     preco,
-    descricao: typeof descricao === "string" && descricao.trim() ? descricao.trim() : undefined,
+    descricao:
+      typeof descricao === "string" && descricao.trim()
+        ? descricao.trim()
+        : undefined,
     imagem: imagemPath,
   });
 

@@ -9,7 +9,10 @@ export default function LoginForm() {
   return (
     <form action={formAction} className="flex w-full max-w-sm flex-col gap-4">
       <div className="flex flex-col gap-1.5">
-        <label htmlFor="senha" className="text-sm font-medium text-off-white/80">
+        <label
+          htmlFor="senha"
+          className="text-sm font-medium text-off-white/80"
+        >
           Senha
         </label>
         <input

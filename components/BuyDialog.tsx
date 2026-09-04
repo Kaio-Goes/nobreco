@@ -8,7 +8,10 @@ type BuyDialogProps = {
   productPrice: string;
 };
 
-export default function BuyDialog({ productName, productPrice }: Readonly<BuyDialogProps>) {
+export default function BuyDialog({
+  productName,
+  productPrice,
+}: Readonly<BuyDialogProps>) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [nome, setNome] = useState("");
   const [tamanho, setTamanho] = useState("");
@@ -24,7 +27,11 @@ export default function BuyDialog({ productName, productPrice }: Readonly<BuyDia
       observacoes ? `Observações: ${observacoes}` : null,
     ].filter(Boolean);
 
-    window.open(buildWhatsappUrl(linhas.join("\n")), "_blank", "noopener,noreferrer");
+    window.open(
+      buildWhatsappUrl(linhas.join("\n")),
+      "_blank",
+      "noopener,noreferrer",
+    );
     dialogRef.current?.close();
   }
 
@@ -49,7 +56,8 @@ export default function BuyDialog({ productName, productPrice }: Readonly<BuyDia
           </div>
 
           <p className="text-sm text-preto/70">
-            Preencha seus dados e enviaremos sua solicitação direto para o nosso WhatsApp.
+            Preencha seus dados e enviaremos sua solicitação direto para o nosso
+            WhatsApp.
           </p>
 
           <div className="flex flex-col gap-1.5">
@@ -66,7 +74,10 @@ export default function BuyDialog({ productName, productPrice }: Readonly<BuyDia
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label htmlFor="tamanho" className="text-sm font-medium text-preto/80">
+            <label
+              htmlFor="tamanho"
+              className="text-sm font-medium text-preto/80"
+            >
               Tamanho desejado (opcional)
             </label>
             <input
@@ -78,7 +89,10 @@ export default function BuyDialog({ productName, productPrice }: Readonly<BuyDia
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label htmlFor="observacoes" className="text-sm font-medium text-preto/80">
+            <label
+              htmlFor="observacoes"
+              className="text-sm font-medium text-preto/80"
+            >
               Observações (opcional)
             </label>
             <textarea

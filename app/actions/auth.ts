@@ -5,7 +5,10 @@ import { createAdminSession, deleteAdminSession } from "@/lib/session";
 
 export type LoginState = { error?: string } | undefined;
 
-export async function login(_state: LoginState, formData: FormData): Promise<LoginState> {
+export async function login(
+  _state: LoginState,
+  formData: FormData,
+): Promise<LoginState> {
   const senha = formData.get("senha");
 
   if (typeof senha !== "string" || senha.length === 0) {

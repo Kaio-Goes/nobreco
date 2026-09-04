@@ -20,7 +20,10 @@ export default async function AdminPage() {
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-semibold text-preto">Painel Nobreco</h1>
         <form action={logout}>
-          <button type="submit" className="text-sm font-medium text-preto/60 hover:text-preto">
+          <button
+            type="submit"
+            className="text-sm font-medium text-preto/60 hover:text-preto"
+          >
             Sair
           </button>
         </form>

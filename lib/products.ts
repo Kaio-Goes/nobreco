@@ -55,7 +55,8 @@ export async function saveProductImage(file: File): Promise<string> {
 
   await fs.mkdir(UPLOAD_DIR, { recursive: true });
 
-  const extension = file.type === "image/svg+xml" ? "svg" : file.type.split("/")[1];
+  const extension =
+    file.type === "image/svg+xml" ? "svg" : file.type.split("/")[1];
   const filename = `${crypto.randomUUID()}.${extension}`;
   const buffer = Buffer.from(await file.arrayBuffer());
 
@@ -71,7 +72,9 @@ export type CreateProductInput = {
   imagem: string;
 };
 
-export async function createProduct(input: CreateProductInput): Promise<Product> {
+export async function createProduct(
+  input: CreateProductInput,
+): Promise<Product> {
   const products = await readAll();
 
   const product: Product = {
