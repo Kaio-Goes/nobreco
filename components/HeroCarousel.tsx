@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 const SLIDES = [
   { src: "/carrossel/prancheta-01.png", alt: "Nobreco — coleção 1" },
@@ -12,15 +12,18 @@ const SLIDES = [
 export default function HeroCarousel() {
   const [index, setIndex] = useState(0);
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setIndex((current) => (current + 1) % SLIDES.length);
-    }, 5000);
-    return () => clearInterval(timer);
+  const goTo = useCallback((i: number) => {
+    setIndex((i + SLIDES.length) % SLIDES.length);
   }, []);
 
+  useEffect(() => {
+    const timer = setInterval(() => goTo(index + 1), 5000);
+    return () => clearInterval(timer);
+  }, [index, goTo]);
+
   return (
-    <div className="relative aspect-[16/9] w-full overflow-hidden bg-preto sm:aspect-[21/9]">
+    // aspect-video casa com a proporção real das imagens (1920x1080), evitando corte/distorção
+    <div className="group relative mx-auto aspect-video w-full max-w-[1600px] overflow-hidden bg-preto">
       {SLIDES.map((slide, i) => (
         <Image
           key={slide.src}
@@ -28,11 +31,29 @@ export default function HeroCarousel() {
           alt={slide.alt}
           fill
           priority={i === 0}
-          className={`object-cover transition-opacity duration-700 ${
-            i === index ? "opacity-100" : "opacity-0"
+          sizes="(min-width: 1600px) 1600px, 100vw"
+          className={`object-cover transition-all duration-1000 ease-out ${
+            i === index ? "scale-100 opacity-100" : "scale-105 opacity-0"
           }`}
         />
       ))}
+
+      <button
+        type="button"
+        aria-label="Slide anterior"
+        onClick={() => goTo(index - 1)}
+        className="absolute left-3 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-preto/40 text-off-white opacity-0 backdrop-blur transition-opacity duration-200 hover:bg-preto/60 group-hover:opacity-100 sm:h-10 sm:w-10"
+      >
+        ‹
+      </button>
+      <button
+        type="button"
+        aria-label="Próximo slide"
+        onClick={() => goTo(index + 1)}
+        className="absolute right-3 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-preto/40 text-off-white opacity-0 backdrop-blur transition-opacity duration-200 hover:bg-preto/60 group-hover:opacity-100 sm:h-10 sm:w-10"
+      >
+        ›
+      </button>
 
       <div className="absolute inset-x-0 bottom-4 flex justify-center gap-2">
         {SLIDES.map((slide, i) => (
@@ -40,9 +61,11 @@ export default function HeroCarousel() {
             key={slide.src}
             type="button"
             aria-label={`Ir para o slide ${i + 1}`}
-            onClick={() => setIndex(i)}
-            className={`h-2 w-2 rounded-full transition-colors ${
-              i === index ? "bg-off-white" : "bg-off-white/40"
+            onClick={() => goTo(i)}
+            className={`h-1.5 rounded-full transition-all duration-300 ${
+              i === index
+                ? "w-6 bg-off-white"
+                : "w-1.5 bg-off-white/50 hover:bg-off-white/80"
             }`}
           />
         ))}

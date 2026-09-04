@@ -2,9 +2,12 @@ import { siteConfig, buildWhatsappUrl } from "@/lib/site-config";
 
 export default function Footer() {
   return (
-    <footer className="border-t border-off-white/10 bg-azul-marinho px-6 py-10 text-off-white">
-      <div className="mx-auto flex max-w-5xl flex-col items-center gap-3 text-center">
-        <span className="text-lg font-semibold tracking-wide">NOBRECO</span>
+    <footer className="relative bg-azul-marinho px-6 py-14 text-off-white">
+      <div className="absolute inset-x-0 top-0 h-[3px] bg-bordo" />
+      <div className="mx-auto flex max-w-5xl flex-col items-center gap-4 text-center">
+        <span className="text-lg font-semibold uppercase tracking-[0.25em]">
+          Nobreco
+        </span>
         <p className="text-sm text-off-white/70">
           Peças selecionadas, compra combinada direto pelo WhatsApp.
         </p>
@@ -14,7 +17,7 @@ export default function Footer() {
           )}
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-2 text-sm font-medium text-off-white underline underline-offset-4 hover:text-off-white/80"
+          className="mt-2 rounded-full border border-off-white/30 px-5 py-2 text-xs font-semibold uppercase tracking-wide transition-colors hover:bg-off-white/10"
         >
           Fale conosco no WhatsApp
         </a>

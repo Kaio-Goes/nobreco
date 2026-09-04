@@ -40,14 +40,14 @@ export default function BuyDialog({
       <button
         type="button"
         onClick={() => dialogRef.current?.showModal()}
-        className="w-full rounded-md bg-bordo px-4 py-2 text-sm font-medium text-off-white transition-colors hover:bg-bordo/80"
+        className="w-full rounded-full bg-bordo px-4 py-2.5 text-xs font-semibold uppercase tracking-wide text-off-white transition-colors hover:bg-bordo/85"
       >
         Comprar
       </button>
 
       <dialog
         ref={dialogRef}
-        className="m-auto w-full max-w-sm rounded-lg border-none bg-off-white p-6 backdrop:bg-preto/60"
+        className="m-auto w-full max-w-sm rounded-2xl border-none bg-off-white p-7 shadow-2xl backdrop:bg-preto/60"
       >
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div>
@@ -108,13 +108,13 @@ export default function BuyDialog({
             <button
               type="button"
               onClick={() => dialogRef.current?.close()}
-              className="flex-1 rounded-md border border-preto/20 px-4 py-2 text-sm font-medium text-preto/70 hover:bg-preto/5"
+              className="flex-1 rounded-full border border-preto/20 px-4 py-2.5 text-sm font-medium text-preto/70 transition-colors hover:bg-preto/5"
             >
               Cancelar
             </button>
             <button
               type="submit"
-              className="flex-1 rounded-md bg-bordo px-4 py-2 text-sm font-medium text-off-white hover:bg-bordo/80"
+              className="flex-1 rounded-full bg-bordo px-4 py-2.5 text-sm font-medium text-off-white transition-colors hover:bg-bordo/85"
             >
               Enviar no WhatsApp
             </button>

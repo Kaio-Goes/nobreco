@@ -15,8 +15,13 @@ export default async function Home() {
 
       <HeroCarousel />
 
-      <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-6 px-6 py-12">
-        <h2 className="text-xl font-semibold text-preto">Peças</h2>
+      <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-8 px-6 py-16">
+        <div className="flex flex-col items-center gap-2 text-center">
+          <h2 className="text-2xl font-semibold uppercase tracking-[0.15em] text-preto">
+            Peças
+          </h2>
+          <span className="h-[3px] w-10 rounded-full bg-bordo" />
+        </div>
         <ProductGrid products={products} />
       </main>
 
