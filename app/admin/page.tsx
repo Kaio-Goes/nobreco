@@ -15,7 +15,7 @@ export default async function AdminPage() {
   const products = await getProducts();
 
   return (
-    <div className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-8 px-6 py-12">
+    <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-8 px-6 py-12">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-semibold text-preto">Painel Nobreco</h1>
         <form action={logout}>

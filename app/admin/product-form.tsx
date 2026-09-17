@@ -308,7 +308,7 @@ export default function ProductForm({
           accept="image/png,image/jpeg,image/webp"
           multiple
           onChange={(e) => addFiles(e.target.files)}
-          className="hidden"
+          className="sr-only"
         />
       </div>
 
