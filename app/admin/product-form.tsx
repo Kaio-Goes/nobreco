@@ -176,10 +176,7 @@ export default function ProductForm({
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div className="flex flex-col gap-1.5">
-          <label
-            htmlFor="preco"
-            className="text-sm font-medium text-preto/80"
-          >
+          <label htmlFor="preco" className="text-sm font-medium text-preto/80">
             Preço (R$)
           </label>
           <input
@@ -338,4 +335,3 @@ export default function ProductForm({
     </form>
   );
 }
-
