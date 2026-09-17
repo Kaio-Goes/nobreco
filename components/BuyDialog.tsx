@@ -42,7 +42,7 @@ export default function BuyDialog({
         onClick={() => dialogRef.current?.showModal()}
         className="w-full rounded-full bg-bordo px-4 py-2.5 text-xs font-semibold uppercase tracking-wide text-off-white transition-colors hover:bg-bordo/85"
       >
-        Comprar
+        Finalizar compra
       </button>
 
       <dialog
