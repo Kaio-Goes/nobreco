@@ -110,6 +110,10 @@ export default function ProductForm({
       setError("Selecione uma categoria válida.");
       return;
     }
+    if (!descricao.trim()) {
+      setError("Informe a descrição da peça.");
+      return;
+    }
     if (existingImages.length + newFiles.length === 0) {
       setError("Adicione ao menos uma foto da peça.");
       return;
@@ -123,7 +127,7 @@ export default function ProductForm({
         nome: nome.trim(),
         preco: precoNum,
         categoria,
-        descricao: descricao.trim() || undefined,
+        descricao: descricao.trim(),
         esgotado,
         imagens,
       };
@@ -150,7 +154,7 @@ export default function ProductForm({
       nome: string;
       preco: number;
       categoria: Category;
-      descricao?: string;
+      descricao: string;
       esgotado: boolean;
       imagens: string[];
     },
@@ -239,13 +243,14 @@ export default function ProductForm({
           htmlFor="descricao"
           className="text-sm font-medium text-preto/80"
         >
-          Descrição (opcional)
+          Descrição
         </label>
         <textarea
           id="descricao"
           value={descricao}
           onChange={(e) => setDescricao(e.target.value)}
           rows={3}
+          required
           className="rounded-md border border-preto/20 bg-white px-3 py-2 text-preto outline-none transition-colors focus:border-bordo"
         />
       </div>
