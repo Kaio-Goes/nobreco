@@ -49,11 +49,14 @@ export default async function Home({
     filteredProducts = [...filteredProducts].sort((a, b) => b.preco - a.preco);
   }
 
+  // some com o carrossel grande ao buscar/filtrar pra não atrapalhar a visão dos resultados
+  const isFiltering = Boolean(busca) || activeCategories.length > 0;
+
   return (
     <div className="flex flex-1 flex-col bg-off-white">
       <Header initialQuery={busca} />
 
-      <HeroCarousel />
+      {!isFiltering && <HeroCarousel />}
 
       <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-6 px-6 py-10">
         <Breadcrumb categorias={activeCategories} />

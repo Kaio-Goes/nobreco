@@ -17,6 +17,7 @@ export default function FiltersSidebar() {
     mutate(params);
     router.push(
       params.size > 0 ? `${pathname}?${params.toString()}` : pathname,
+      { scroll: false },
     );
   }
 

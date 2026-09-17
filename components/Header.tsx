@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { siteConfig, buildWhatsappUrl } from "@/lib/site-config";
-import FavoritesLink from "./FavoritesLink";
 
 export default function Header({
   initialQuery = "",
@@ -59,7 +58,6 @@ export default function Header({
         </form>
 
         <div className="flex shrink-0 items-center gap-1.5">
-          <FavoritesLink />
           <a
             href={buildWhatsappUrl(
               `Olá! Quero saber mais sobre as peças da ${siteConfig.nome}.`,

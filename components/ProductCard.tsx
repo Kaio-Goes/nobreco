@@ -1,23 +1,45 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import type { Product } from "@/lib/products";
 import { formatPrice, formatInstallment } from "@/lib/format";
-import { useFavorites } from "@/lib/use-favorites";
 import BuyDialog from "./BuyDialog";
+
+const SWIPE_THRESHOLD = 40;
 
 export default function ProductCard({
   product,
 }: Readonly<{ product: Product }>) {
   const preco = formatPrice(product.preco);
-  const { isFavorite, toggleFavorite } = useFavorites();
-  const favorito = isFavorite(product.id);
   const [activeImage, setActiveImage] = useState(0);
+  const touchStartX = useRef<number | null>(null);
+
+  function handleTouchStart(event: React.TouchEvent) {
+    touchStartX.current = event.touches[0].clientX;
+  }
+
+  function handleTouchEnd(event: React.TouchEvent) {
+    if (touchStartX.current === null) return;
+    const delta = event.changedTouches[0].clientX - touchStartX.current;
+    touchStartX.current = null;
+    if (Math.abs(delta) < SWIPE_THRESHOLD) return;
+
+    const lastIndex = product.imagens.length - 1;
+    if (delta < 0) {
+      setActiveImage((current) => Math.min(current + 1, lastIndex));
+    } else {
+      setActiveImage((current) => Math.max(current - 1, 0));
+    }
+  }
 
   return (
     <div className="group flex flex-col overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-preto/5 transition-shadow duration-300 hover:shadow-lg">
-      <div className="relative aspect-[3/4] w-full overflow-hidden bg-creme">
+      <div
+        className="relative aspect-[3/4] w-full overflow-hidden bg-creme"
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+      >
         <Image
           src={product.imagens[activeImage] ?? product.imagens[0]}
           alt={product.nome}
@@ -33,30 +55,6 @@ export default function ProductCard({
             Esgotado
           </span>
         )}
-
-        <button
-          type="button"
-          onClick={() => toggleFavorite(product.id)}
-          aria-label={
-            favorito ? "Remover dos favoritos" : "Adicionar aos favoritos"
-          }
-          className="absolute right-2.5 top-2.5 flex h-8 w-8 items-center justify-center rounded-full bg-white/90 text-preto shadow-sm transition-colors hover:bg-white"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill={favorito ? "currentColor" : "none"}
-            stroke="currentColor"
-            strokeWidth={1.8}
-            className={`h-4 w-4 ${favorito ? "text-bordo" : ""}`}
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"
-            />
-          </svg>
-        </button>
 
         {product.imagens.length > 1 && (
           <div className="absolute inset-x-0 bottom-2 flex justify-center gap-1.5">
