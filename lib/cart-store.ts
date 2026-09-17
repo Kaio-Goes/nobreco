@@ -2,7 +2,11 @@
 
 import { useCallback, useEffect, useState } from "react";
 
-export type CartItem = { productId: string; quantidade: number };
+export type CartItem = {
+  productId: string;
+  quantidade: number;
+  tamanho?: string;
+};
 
 const STORAGE_KEY = "nobreco:carrinho";
 const EVENT_NAME = "nobreco:carrinho-changed";
@@ -37,18 +41,25 @@ export function useCart() {
     };
   }, []);
 
-  const addToCart = useCallback((productId: string, quantidade = 1) => {
-    const current = readCart();
-    const exists = current.some((item) => item.productId === productId);
-    const next = exists
-      ? current.map((item) =>
-          item.productId === productId
-            ? { ...item, quantidade: item.quantidade + quantidade }
-            : item,
-        )
-      : [...current, { productId, quantidade }];
-    writeCart(next);
-  }, []);
+  const addToCart = useCallback(
+    (productId: string, quantidade = 1, tamanho?: string) => {
+      const current = readCart();
+      const exists = current.some((item) => item.productId === productId);
+      const next = exists
+        ? current.map((item) =>
+            item.productId === productId
+              ? {
+                  ...item,
+                  quantidade: item.quantidade + quantidade,
+                  tamanho: tamanho ?? item.tamanho,
+                }
+              : item,
+          )
+        : [...current, { productId, quantidade, tamanho }];
+      writeCart(next);
+    },
+    [],
+  );
 
   const removeFromCart = useCallback((productId: string) => {
     writeCart(readCart().filter((item) => item.productId !== productId));

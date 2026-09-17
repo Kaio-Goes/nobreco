@@ -6,18 +6,18 @@ import type { Product } from "@/lib/products";
 import { formatPrice, formatInstallment } from "@/lib/format";
 import { useCart } from "@/lib/cart-store";
 import ProductGallery from "@/components/ProductGallery";
-import BuyDialog from "@/components/BuyDialog";
 
 export default function ProductDetail({
   product,
 }: Readonly<{ product: Product }>) {
   const preco = formatPrice(product.preco);
   const { addToCart } = useCart();
-  const [added, setAdded] = useState(false);
+  const [tamanho, setTamanho] = useState("");
+  const [hasAdded, setHasAdded] = useState(false);
 
   function handleAddToCart() {
-    addToCart(product.id);
-    setAdded(true);
+    addToCart(product.id, 1, tamanho.trim() || undefined);
+    setHasAdded(true);
   }
 
   return (
@@ -65,26 +65,46 @@ export default function ProductDetail({
           </p>
         ) : (
           <>
-            <div className="flex flex-col gap-3 sm:flex-row">
-              <button
-                type="button"
-                onClick={handleAddToCart}
-                className="flex-1 rounded-full border border-bordo px-4 py-3 text-xs font-semibold uppercase tracking-wide text-bordo transition-colors hover:bg-bordo/10"
+            <div className="flex flex-col gap-1.5">
+              <label
+                htmlFor="tamanho"
+                className="text-sm font-medium text-preto/80"
               >
-                {added ? "Adicionado ✓" : "Adicionar ao carrinho"}
-              </button>
-              <div className="flex-1">
-                <BuyDialog productName={product.nome} productPrice={preco} />
-              </div>
+                Tamanho desejado (opcional)
+              </label>
+              <input
+                id="tamanho"
+                value={tamanho}
+                onChange={(e) => setTamanho(e.target.value)}
+                className="rounded-md border border-preto/20 bg-white px-3 py-2 text-preto outline-none focus:border-bordo"
+              />
             </div>
 
-            {added && (
-              <Link
-                href="/carrinho"
-                className="text-sm font-medium text-bordo underline"
-              >
-                Ver carrinho
-              </Link>
+            <button
+              type="button"
+              onClick={handleAddToCart}
+              className="rounded-full bg-bordo px-4 py-3 text-xs font-semibold uppercase tracking-wide text-off-white transition-colors hover:bg-bordo/85"
+            >
+              Adicionar ao carrinho
+            </button>
+
+            {hasAdded && (
+              <div className="flex flex-col gap-2 rounded-md bg-preto/5 px-4 py-3 text-sm">
+                <span className="text-preto/70">
+                  Peça adicionada ao carrinho ✓
+                </span>
+                <div className="flex flex-wrap gap-x-4 gap-y-1">
+                  <Link href="/" className="font-medium text-bordo underline">
+                    Adicionar mais itens
+                  </Link>
+                  <Link
+                    href="/carrinho"
+                    className="font-medium text-bordo underline"
+                  >
+                    Ver carrinho e finalizar compra
+                  </Link>
+                </div>
+              </div>
             )}
           </>
         )}

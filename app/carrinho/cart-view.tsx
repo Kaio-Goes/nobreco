@@ -18,11 +18,18 @@ export default function CartView({
   const cartProducts = items
     .map((item) => {
       const product = products.find((p) => p.id === item.productId);
-      return product ? { product, quantidade: item.quantidade } : null;
+      return product
+        ? { product, quantidade: item.quantidade, tamanho: item.tamanho }
+        : null;
     })
     .filter(
-      (entry): entry is { product: Product; quantidade: number } =>
-        entry !== null,
+      (
+        entry,
+      ): entry is {
+        product: Product;
+        quantidade: number;
+        tamanho: string | undefined;
+      } => entry !== null,
     );
 
   const total = cartProducts.reduce(
@@ -33,10 +40,10 @@ export default function CartView({
   function handleFinalizar(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    const linhasItens = cartProducts.map(
-      ({ product, quantidade }) =>
-        `• ${quantidade}x ${product.nome} (${formatPrice(product.preco)} cada)`,
-    );
+    const linhasItens = cartProducts.map(({ product, quantidade, tamanho }) => {
+      const detalheTamanho = tamanho ? ` (tamanho ${tamanho})` : "";
+      return `• ${quantidade}x ${product.nome}${detalheTamanho} - ${formatPrice(product.preco)} cada`;
+    });
 
     const linhas = [
       "Olá! Quero finalizar essa compra:",
@@ -68,7 +75,7 @@ export default function CartView({
   return (
     <div className="flex flex-col gap-8">
       <ul className="flex flex-col gap-4">
-        {cartProducts.map(({ product, quantidade }) => (
+        {cartProducts.map(({ product, quantidade, tamanho }) => (
           <li
             key={product.id}
             className="flex items-center gap-4 rounded-xl border border-preto/10 bg-white p-4"
@@ -87,6 +94,11 @@ export default function CartView({
               <span className="text-sm font-medium uppercase tracking-wide text-preto">
                 {product.nome}
               </span>
+              {tamanho && (
+                <span className="text-xs text-preto/50">
+                  Tamanho: {tamanho}
+                </span>
+              )}
               <span className="text-sm text-bordo">
                 {formatPrice(product.preco)}
               </span>
