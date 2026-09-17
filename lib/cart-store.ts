@@ -54,17 +54,20 @@ export function useCart() {
     writeCart(readCart().filter((item) => item.productId !== productId));
   }, []);
 
-  const updateQuantity = useCallback((productId: string, quantidade: number) => {
-    if (quantidade <= 0) {
-      writeCart(readCart().filter((item) => item.productId !== productId));
-      return;
-    }
-    writeCart(
-      readCart().map((item) =>
-        item.productId === productId ? { ...item, quantidade } : item,
-      ),
-    );
-  }, []);
+  const updateQuantity = useCallback(
+    (productId: string, quantidade: number) => {
+      if (quantidade <= 0) {
+        writeCart(readCart().filter((item) => item.productId !== productId));
+        return;
+      }
+      writeCart(
+        readCart().map((item) =>
+          item.productId === productId ? { ...item, quantidade } : item,
+        ),
+      );
+    },
+    [],
+  );
 
   const clearCart = useCallback(() => writeCart([]), []);
 

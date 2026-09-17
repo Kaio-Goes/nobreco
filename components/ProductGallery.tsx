@@ -48,11 +48,15 @@ export default function ProductGallery({
   }
 
   function goToPrev() {
-    setActiveImage((current) => (current === 0 ? images.length - 1 : current - 1));
+    setActiveImage((current) =>
+      current === 0 ? images.length - 1 : current - 1,
+    );
   }
 
   function goToNext() {
-    setActiveImage((current) => (current === images.length - 1 ? 0 : current + 1));
+    setActiveImage((current) =>
+      current === images.length - 1 ? 0 : current + 1,
+    );
   }
 
   return (
@@ -93,7 +97,11 @@ export default function ProductGallery({
               strokeWidth={2.5}
               className="h-3.5 w-3.5"
             >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M15 19l-7-7 7-7"
+              />
             </svg>
           </button>
           <button
@@ -110,7 +118,11 @@ export default function ProductGallery({
               strokeWidth={2.5}
               className="h-3.5 w-3.5"
             >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M9 5l7 7-7 7"
+              />
             </svg>
           </button>
 
