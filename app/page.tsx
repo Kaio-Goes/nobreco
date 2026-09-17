@@ -51,7 +51,7 @@ export default async function Home({
 
   return (
     <div className="flex flex-1 flex-col bg-off-white">
-      <Header initialQuery={busca} activeCategories={activeCategories} />
+      <Header initialQuery={busca} />
 
       <HeroCarousel />
 

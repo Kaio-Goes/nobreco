@@ -1,12 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
-import { CATEGORIES, siteConfig, buildWhatsappUrl } from "@/lib/site-config";
+import { siteConfig, buildWhatsappUrl } from "@/lib/site-config";
 import FavoritesLink from "./FavoritesLink";
 
 export default function Header({
   initialQuery = "",
-  activeCategories = [],
-}: Readonly<{ initialQuery?: string; activeCategories?: string[] }>) {
+}: Readonly<{ initialQuery?: string }>) {
   return (
     <header className="sticky top-0 z-20 flex flex-col gap-3 bg-off-white/95 px-6 py-4 shadow-[0_1px_0_0_rgba(24,24,23,0.08)] backdrop-blur-md">
       <div className="flex items-center justify-between gap-4">
@@ -73,32 +72,6 @@ export default function Header({
           </a>
         </div>
       </div>
-
-      <nav className="flex items-center gap-5 overflow-x-auto text-xs font-semibold uppercase tracking-wide text-preto/70">
-        <Link
-          href="/"
-          className={`shrink-0 pb-1 transition-colors hover:text-preto ${
-            activeCategories.length === 0
-              ? "border-b-2 border-bordo text-preto"
-              : ""
-          }`}
-        >
-          Todos
-        </Link>
-        {CATEGORIES.map((categoria) => (
-          <Link
-            key={categoria}
-            href={`/?categoria=${encodeURIComponent(categoria)}`}
-            className={`shrink-0 pb-1 transition-colors hover:text-preto ${
-              activeCategories.includes(categoria)
-                ? "border-b-2 border-bordo text-preto"
-                : ""
-            }`}
-          >
-            {categoria}
-          </Link>
-        ))}
-      </nav>
     </header>
   );
 }
