@@ -69,7 +69,6 @@ export default function ProductCard({
         )}
       </div>
 
-
       <div className="flex flex-1 flex-col gap-1.5 p-4">
         <span className="text-[11px] uppercase tracking-wide text-preto/40">
           {product.categoria}

@@ -7,16 +7,17 @@ import {
   doc,
   updateDoc,
 } from "firebase/firestore";
-import { deleteObject, getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import {
+  deleteObject,
+  getDownloadURL,
+  ref,
+  uploadBytes,
+} from "firebase/storage";
 import { firestoreDb, firebaseStorage } from "@/lib/firestore";
 import { PRODUCTS_COLLECTION } from "@/lib/products";
 import type { Category } from "@/lib/site-config";
 
-const ALLOWED_IMAGE_TYPES = new Set([
-  "image/png",
-  "image/jpeg",
-  "image/webp",
-]);
+const ALLOWED_IMAGE_TYPES = new Set(["image/png", "image/jpeg", "image/webp"]);
 const MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5MB
 
 /** Envia as fotos pro Firebase Storage e retorna as URLs públicas, na mesma ordem. */
@@ -24,7 +25,9 @@ export async function uploadProductImages(files: File[]): Promise<string[]> {
   const urls: string[] = [];
   for (const file of files) {
     if (!ALLOWED_IMAGE_TYPES.has(file.type)) {
-      throw new Error("Formato de imagem não suportado (use PNG, JPEG ou WEBP).");
+      throw new Error(
+        "Formato de imagem não suportado (use PNG, JPEG ou WEBP).",
+      );
     }
     if (file.size > MAX_IMAGE_SIZE) {
       throw new Error("Imagem muito grande (máx. 5MB).");

@@ -31,9 +31,7 @@ export async function getProducts(): Promise<Product[]> {
   return snapshot.docs.map((d) => ({ id: d.id, ...d.data() }) as Product);
 }
 
-export async function getProductById(
-  id: string,
-): Promise<Product | undefined> {
+export async function getProductById(id: string): Promise<Product | undefined> {
   const snapshot = await getDoc(doc(firestoreDb, PRODUCTS_COLLECTION, id));
   return snapshot.exists()
     ? ({ id: snapshot.id, ...snapshot.data() } as Product)

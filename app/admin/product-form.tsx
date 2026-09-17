@@ -97,9 +97,7 @@ export default function ProductForm({
 
       onSaved();
     } catch (err) {
-      setError(
-        err instanceof Error ? err.message : "Falha ao salvar a peça.",
-      );
+      setError(err instanceof Error ? err.message : "Falha ao salvar a peça.");
     } finally {
       setPending(false);
     }
@@ -221,7 +219,12 @@ export default function ProductForm({
                 key={url}
                 className="relative h-20 w-20 overflow-hidden rounded-md bg-creme"
               >
-                <Image src={url} alt="Foto da peça" fill className="object-cover" />
+                <Image
+                  src={url}
+                  alt="Foto da peça"
+                  fill
+                  className="object-cover"
+                />
                 <button
                   type="button"
                   onClick={() => removeExistingImage(url)}
@@ -237,7 +240,12 @@ export default function ProductForm({
                 key={url}
                 className="relative h-20 w-20 overflow-hidden rounded-md bg-creme"
               >
-                <Image src={url} alt="Nova foto" fill className="object-cover" />
+                <Image
+                  src={url}
+                  alt="Nova foto"
+                  fill
+                  className="object-cover"
+                />
                 <button
                   type="button"
                   onClick={() => removeNewFile(i)}
@@ -289,4 +297,3 @@ export default function ProductForm({
     </form>
   );
 }
-
