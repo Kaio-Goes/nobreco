@@ -1,7 +1,8 @@
 import "server-only";
 import { createRemoteJWKSet, jwtVerify } from "jose";
 
-const projectId = process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID;
+// .trim() evita mismatch de issuer/audience quando a env var tem espaço/quebra de linha extra.
+const projectId = process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID?.trim();
 
 if (!projectId) {
   throw new Error(
