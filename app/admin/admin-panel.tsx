@@ -61,7 +61,8 @@ export default function AdminPanel({
           Sua sessão de login expirou. Para salvar alterações,{" "}
           <a href="/admin/login" className="font-semibold underline">
             saia e entre novamente
-          </a>.
+          </a>
+          .
         </p>
       )}
 
