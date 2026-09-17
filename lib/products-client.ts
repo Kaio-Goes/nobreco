@@ -18,7 +18,7 @@ import { PRODUCTS_COLLECTION } from "@/lib/products";
 import type { Category } from "@/lib/site-config";
 
 const ALLOWED_IMAGE_TYPES = new Set(["image/png", "image/jpeg", "image/webp"]);
-const MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5MB
+const MAX_IMAGE_SIZE = 20 * 1024 * 1024; // 20MB
 
 /** Envia as fotos pro Firebase Storage e retorna as URLs públicas, na mesma ordem. */
 export async function uploadProductImages(files: File[]): Promise<string[]> {
@@ -30,7 +30,7 @@ export async function uploadProductImages(files: File[]): Promise<string[]> {
       );
     }
     if (file.size > MAX_IMAGE_SIZE) {
-      throw new Error("Imagem muito grande (máx. 5MB).");
+      throw new Error("Imagem muito grande (máx. 20MB).");
     }
 
     const extension = file.type.split("/")[1];

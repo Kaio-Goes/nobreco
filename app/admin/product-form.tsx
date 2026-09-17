@@ -11,12 +11,22 @@ import {
 import type { Product } from "@/lib/products";
 import { CATEGORIES, type Category } from "@/lib/site-config";
 
+function mapSaveError(err: unknown): string {
+  const code = (err as { code?: string } | null)?.code;
+  if (code === "storage/unauthorized" || code === "permission-denied") {
+    return "Sua sessão de login expirou. Saia e entre novamente para salvar.";
+  }
+  return err instanceof Error ? err.message : "Falha ao salvar a peça.";
+}
+
 export default function ProductForm({
   product,
+  disabled,
   onSaved,
   onCancelEdit,
 }: Readonly<{
   product?: Product | null;
+  disabled?: boolean;
   onSaved: () => void;
   onCancelEdit?: () => void;
 }>) {
@@ -80,6 +90,13 @@ export default function ProductForm({
     event.preventDefault();
     setError(null);
 
+    if (disabled) {
+      setError(
+        "Sua sessão de login expirou. Saia e entre novamente para salvar.",
+      );
+      return;
+    }
+
     const precoNum = Number(preco);
     if (!nome.trim()) {
       setError("Informe o nome da peça.");
@@ -120,7 +137,7 @@ export default function ProductForm({
 
       onSaved();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Falha ao salvar a peça.");
+      setError(mapSaveError(err));
     } finally {
       setPending(false);
     }
@@ -289,21 +306,21 @@ export default function ProductForm({
             </div>
           ))}
 
-          <button
-            type="button"
-            onClick={() => fileInputRef.current?.click()}
+          <label
+            htmlFor="new-photo-input"
             aria-label="Adicionar fotos"
-            className="flex h-20 w-20 flex-col items-center justify-center gap-1 rounded-md border-2 border-dashed border-preto/25 text-preto/40 transition-colors hover:border-bordo hover:text-bordo"
+            className="flex h-20 w-20 cursor-pointer flex-col items-center justify-center gap-1 rounded-md border-2 border-dashed border-preto/25 text-preto/40 transition-colors hover:border-bordo hover:text-bordo"
           >
             <span className="text-2xl leading-none">+</span>
             <span className="text-[10px] font-medium uppercase tracking-wide">
               Adicionar
             </span>
-          </button>
+          </label>
         </div>
 
         <input
           ref={fileInputRef}
+          id="new-photo-input"
           type="file"
           accept="image/png,image/jpeg,image/webp"
           multiple
@@ -317,7 +334,7 @@ export default function ProductForm({
       <div className="flex gap-3">
         <button
           type="submit"
-          disabled={pending}
+          disabled={pending || disabled}
           className="flex-1 rounded-md bg-bordo px-4 py-2 font-medium text-off-white transition-colors hover:bg-bordo/80 disabled:opacity-60"
         >
           {submitLabel}
