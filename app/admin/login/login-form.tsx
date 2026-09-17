@@ -16,19 +16,24 @@ export default function LoginForm() {
     setError(null);
 
     startTransition(async () => {
+      let idToken: string;
       try {
         const credential = await signInWithEmailAndPassword(
           firebaseAuth,
           email,
           senha,
         );
-        const idToken = await credential.user.getIdToken();
-        const result = await loginWithFirebase(idToken);
-        if (result?.error) {
-          setError(result.error);
-        }
+        idToken = await credential.user.getIdToken();
       } catch {
         setError("E-mail ou senha inválidos.");
+        return;
+      }
+
+      // fora do try/catch: redirect() da server action lança um erro especial que
+      // não pode ser capturado aqui, senão o Next mostra o catch antes de navegar.
+      const result = await loginWithFirebase(idToken);
+      if (result?.error) {
+        setError(result.error);
       }
     });
   }
