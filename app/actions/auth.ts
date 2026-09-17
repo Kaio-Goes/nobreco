@@ -7,17 +7,10 @@ import { verifyFirebaseIdToken } from "@/lib/firebase-verify";
 export type LoginState = { error?: string } | undefined;
 
 export async function loginWithFirebase(idToken: string): Promise<LoginState> {
-  let email: string;
   try {
-    const payload = await verifyFirebaseIdToken(idToken);
-    email = payload.email;
+    await verifyFirebaseIdToken(idToken);
   } catch {
     return { error: "Não foi possível validar seu login. Tente novamente." };
-  }
-
-  const allowedEmail = process.env.ADMIN_EMAIL?.toLowerCase();
-  if (!allowedEmail || email.toLowerCase() !== allowedEmail) {
-    return { error: "Usuário não autorizado." };
   }
 
   await createAdminSession();

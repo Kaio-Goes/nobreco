@@ -1,6 +1,12 @@
-import "server-only";
-import fs from "node:fs/promises";
-import path from "node:path";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  orderBy,
+  query,
+} from "firebase/firestore";
+import { firestoreDb } from "@/lib/firestore";
 import type { Category } from "@/lib/site-config";
 
 export type Product = {
@@ -9,95 +15,27 @@ export type Product = {
   preco: number; // valor em reais
   categoria: Category;
   descricao?: string;
-  imagem: string; // caminho público, ex: /produtos/arquivo.png
+  imagens: string[]; // URLs das fotos no Firebase Storage (na ordem de exibição)
   criadoEm: string; // ISO date
 };
 
-const DATA_FILE = path.join(process.cwd(), "data", "products.json");
-const UPLOAD_DIR = path.join(process.cwd(), "public", "produtos");
-const UPLOAD_PUBLIC_PATH = "/produtos";
-
-async function readAll(): Promise<Product[]> {
-  const raw = await fs.readFile(DATA_FILE, "utf-8");
-  return JSON.parse(raw) as Product[];
-}
-
-async function writeAll(products: Product[]) {
-  await fs.writeFile(DATA_FILE, JSON.stringify(products, null, 2), "utf-8");
-}
+export const PRODUCTS_COLLECTION = "produtos";
 
 export async function getProducts(): Promise<Product[]> {
-  const products = await readAll();
-  return products.sort(
-    (a, b) => new Date(b.criadoEm).getTime() - new Date(a.criadoEm).getTime(),
+  const snapshot = await getDocs(
+    query(
+      collection(firestoreDb, PRODUCTS_COLLECTION),
+      orderBy("criadoEm", "desc"),
+    ),
   );
+  return snapshot.docs.map((d) => ({ id: d.id, ...d.data() }) as Product);
 }
 
-export async function getProductById(id: string): Promise<Product | undefined> {
-  const products = await readAll();
-  return products.find((p) => p.id === id);
-}
-
-const ALLOWED_IMAGE_TYPES = new Set([
-  "image/png",
-  "image/jpeg",
-  "image/webp",
-  "image/svg+xml",
-]);
-const MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5MB
-
-/** Salva o arquivo de imagem enviado no admin e retorna o caminho público. */
-export async function saveProductImage(file: File): Promise<string> {
-  if (!ALLOWED_IMAGE_TYPES.has(file.type)) {
-    throw new Error("Formato de imagem não suportado.");
-  }
-  if (file.size > MAX_IMAGE_SIZE) {
-    throw new Error("Imagem muito grande (máx. 5MB).");
-  }
-
-  await fs.mkdir(UPLOAD_DIR, { recursive: true });
-
-  const extension =
-    file.type === "image/svg+xml" ? "svg" : file.type.split("/")[1];
-  const filename = `${crypto.randomUUID()}.${extension}`;
-  const buffer = Buffer.from(await file.arrayBuffer());
-
-  await fs.writeFile(path.join(UPLOAD_DIR, filename), buffer);
-
-  return `${UPLOAD_PUBLIC_PATH}/${filename}`;
-}
-
-export type CreateProductInput = {
-  nome: string;
-  preco: number;
-  categoria: Category;
-  descricao?: string;
-  imagem: string;
-};
-
-export async function createProduct(
-  input: CreateProductInput,
-): Promise<Product> {
-  const products = await readAll();
-
-  const product: Product = {
-    id: crypto.randomUUID(),
-    nome: input.nome,
-    preco: input.preco,
-    categoria: input.categoria,
-    descricao: input.descricao,
-    imagem: input.imagem,
-    criadoEm: new Date().toISOString(),
-  };
-
-  products.push(product);
-  await writeAll(products);
-
-  return product;
-}
-
-export async function deleteProduct(id: string): Promise<void> {
-  const products = await readAll();
-  const remaining = products.filter((p) => p.id !== id);
-  await writeAll(remaining);
+export async function getProductById(
+  id: string,
+): Promise<Product | undefined> {
+  const snapshot = await getDoc(doc(firestoreDb, PRODUCTS_COLLECTION, id));
+  return snapshot.exists()
+    ? ({ id: snapshot.id, ...snapshot.data() } as Product)
+    : undefined;
 }

@@ -1,0 +1,12 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Catálogo de produtos: leitura pública (loja), escrita por qualquer usuário autenticado
+    // (o controle de quem pode logar é feito direto no Firebase Authentication).
+    match /produtos/{produtoId} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+  }
+}

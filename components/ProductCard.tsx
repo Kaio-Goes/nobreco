@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useState } from "react";
 import type { Product } from "@/lib/products";
 import { formatPrice, formatInstallment } from "@/lib/format";
 import { useFavorites } from "@/lib/use-favorites";
@@ -12,12 +13,13 @@ export default function ProductCard({
   const preco = formatPrice(product.preco);
   const { isFavorite, toggleFavorite } = useFavorites();
   const favorito = isFavorite(product.id);
+  const [activeImage, setActiveImage] = useState(0);
 
   return (
     <div className="group flex flex-col overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-preto/5 transition-shadow duration-300 hover:shadow-lg">
       <div className="relative aspect-[3/4] w-full overflow-hidden bg-creme">
         <Image
-          src={product.imagem}
+          src={product.imagens[activeImage] ?? product.imagens[0]}
           alt={product.nome}
           fill
           className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
@@ -47,7 +49,26 @@ export default function ProductCard({
             />
           </svg>
         </button>
+
+        {product.imagens.length > 1 && (
+          <div className="absolute inset-x-0 bottom-2 flex justify-center gap-1.5">
+            {product.imagens.map((img, i) => (
+              <button
+                key={img}
+                type="button"
+                aria-label={`Ver foto ${i + 1}`}
+                onClick={() => setActiveImage(i)}
+                className={`h-1.5 rounded-full transition-all duration-300 ${
+                  i === activeImage
+                    ? "w-4 bg-off-white"
+                    : "w-1.5 bg-off-white/60 hover:bg-off-white/80"
+                }`}
+              />
+            ))}
+          </div>
+        )}
       </div>
+
 
       <div className="flex flex-1 flex-col gap-1.5 p-4">
         <span className="text-[11px] uppercase tracking-wide text-preto/40">

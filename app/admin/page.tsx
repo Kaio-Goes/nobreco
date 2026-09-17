@@ -2,8 +2,7 @@ import { redirect } from "next/navigation";
 import { getAdminSession } from "@/lib/session";
 import { getProducts } from "@/lib/products";
 import { logout } from "@/app/actions/auth";
-import ProductForm from "./product-form";
-import ProductList from "./product-list";
+import AdminPanel from "./admin-panel";
 
 export const dynamic = "force-dynamic";
 
@@ -29,12 +28,8 @@ export default async function AdminPage() {
         </form>
       </div>
 
-      <ProductForm />
-
-      <div className="flex flex-col gap-3">
-        <h2 className="text-lg font-semibold text-preto">Peças cadastradas</h2>
-        <ProductList products={products} />
-      </div>
+      <AdminPanel initialProducts={products} />
     </div>
   );
 }
+
