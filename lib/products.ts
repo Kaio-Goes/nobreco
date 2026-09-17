@@ -15,6 +15,7 @@ export type Product = {
   preco: number; // valor em reais
   categoria: Category;
   descricao?: string;
+  esgotado?: boolean;
   imagens: string[]; // URLs das fotos no Firebase Storage (na ordem de exibição)
   criadoEm: string; // ISO date
 };

@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   createProduct,
   deleteProductImage,
@@ -21,24 +21,39 @@ export default function ProductForm({
   onCancelEdit?: () => void;
 }>) {
   const editing = Boolean(product);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [nome, setNome] = useState("");
   const [preco, setPreco] = useState("");
   const [categoria, setCategoria] = useState<Category | "">("");
   const [descricao, setDescricao] = useState("");
+  const [esgotado, setEsgotado] = useState(false);
   const [existingImages, setExistingImages] = useState<string[]>([]);
   const [newFiles, setNewFiles] = useState<File[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
+
+  function resetForm() {
+    setNome("");
+    setPreco("");
+    setCategoria("");
+    setDescricao("");
+    setEsgotado(false);
+    setExistingImages([]);
+    setNewFiles([]);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  }
 
   useEffect(() => {
     setNome(product?.nome ?? "");
     setPreco(product ? String(product.preco) : "");
     setCategoria(product?.categoria ?? "");
     setDescricao(product?.descricao ?? "");
+    setEsgotado(product?.esgotado ?? false);
     setExistingImages(product?.imagens ?? []);
     setNewFiles([]);
     setError(null);
+    if (fileInputRef.current) fileInputRef.current.value = "";
   }, [product]);
 
   const newPreviews = newFiles.map((file) => URL.createObjectURL(file));
@@ -53,6 +68,12 @@ export default function ProductForm({
 
   function removeNewFile(index: number) {
     setNewFiles((current) => current.filter((_, i) => i !== index));
+  }
+
+  function addFiles(files: FileList | null) {
+    if (!files) return;
+    setNewFiles((current) => [...current, ...Array.from(files)]);
+    if (fileInputRef.current) fileInputRef.current.value = "";
   }
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -86,6 +107,7 @@ export default function ProductForm({
         preco: precoNum,
         categoria,
         descricao: descricao.trim() || undefined,
+        esgotado,
         imagens,
       };
 
@@ -93,6 +115,7 @@ export default function ProductForm({
         await updateProductAndCleanup(product, existingImages, input);
       } else {
         await createProduct(input);
+        resetForm();
       }
 
       onSaved();
@@ -111,6 +134,7 @@ export default function ProductForm({
       preco: number;
       categoria: Category;
       descricao?: string;
+      esgotado: boolean;
       imagens: string[];
     },
   ) {
@@ -131,7 +155,7 @@ export default function ProductForm({
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex flex-col gap-4 rounded-lg border border-preto/10 bg-off-white p-6"
+      className="flex flex-col gap-6 rounded-xl border border-preto/10 bg-off-white p-6 shadow-sm"
     >
       <h2 className="text-lg font-semibold text-preto">
         {editing ? "Editar peça" : "Cadastrar nova peça"}
@@ -146,49 +170,54 @@ export default function ProductForm({
           value={nome}
           onChange={(e) => setNome(e.target.value)}
           required
-          className="rounded-md border border-preto/20 bg-white px-3 py-2 text-preto outline-none focus:border-bordo"
+          className="rounded-md border border-preto/20 bg-white px-3 py-2 text-preto outline-none transition-colors focus:border-bordo"
         />
       </div>
 
-      <div className="flex flex-col gap-1.5">
-        <label htmlFor="preco" className="text-sm font-medium text-preto/80">
-          Preço (R$)
-        </label>
-        <input
-          id="preco"
-          type="number"
-          step="0.01"
-          min="0"
-          value={preco}
-          onChange={(e) => setPreco(e.target.value)}
-          required
-          className="rounded-md border border-preto/20 bg-white px-3 py-2 text-preto outline-none focus:border-bordo"
-        />
-      </div>
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <div className="flex flex-col gap-1.5">
+          <label
+            htmlFor="preco"
+            className="text-sm font-medium text-preto/80"
+          >
+            Preço (R$)
+          </label>
+          <input
+            id="preco"
+            type="number"
+            step="0.01"
+            min="0"
+            value={preco}
+            onChange={(e) => setPreco(e.target.value)}
+            required
+            className="rounded-md border border-preto/20 bg-white px-3 py-2 text-preto outline-none transition-colors focus:border-bordo"
+          />
+        </div>
 
-      <div className="flex flex-col gap-1.5">
-        <label
-          htmlFor="categoria"
-          className="text-sm font-medium text-preto/80"
-        >
-          Categoria
-        </label>
-        <select
-          id="categoria"
-          value={categoria}
-          onChange={(e) => setCategoria(e.target.value as Category)}
-          required
-          className="rounded-md border border-preto/20 bg-white px-3 py-2 text-preto outline-none focus:border-bordo"
-        >
-          <option value="" disabled>
-            Selecione...
-          </option>
-          {CATEGORIES.map((c) => (
-            <option key={c} value={c}>
-              {c}
+        <div className="flex flex-col gap-1.5">
+          <label
+            htmlFor="categoria"
+            className="text-sm font-medium text-preto/80"
+          >
+            Categoria
+          </label>
+          <select
+            id="categoria"
+            value={categoria}
+            onChange={(e) => setCategoria(e.target.value as Category)}
+            required
+            className="rounded-md border border-preto/20 bg-white px-3 py-2 text-preto outline-none transition-colors focus:border-bordo"
+          >
+            <option value="" disabled>
+              Selecione...
             </option>
-          ))}
-        </select>
+            {CATEGORIES.map((c) => (
+              <option key={c} value={c}>
+                {c}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
 
       <div className="flex flex-col gap-1.5">
@@ -203,74 +232,86 @@ export default function ProductForm({
           value={descricao}
           onChange={(e) => setDescricao(e.target.value)}
           rows={3}
-          className="rounded-md border border-preto/20 bg-white px-3 py-2 text-preto outline-none focus:border-bordo"
+          className="rounded-md border border-preto/20 bg-white px-3 py-2 text-preto outline-none transition-colors focus:border-bordo"
         />
       </div>
 
-      <div className="flex flex-col gap-1.5">
-        <span className="text-sm font-medium text-preto/80">
-          Fotos (pode selecionar mais de uma)
+      <label className="flex items-center gap-2.5 rounded-md border border-preto/15 bg-white px-3 py-2.5 text-sm text-preto/80">
+        <input
+          type="checkbox"
+          checked={esgotado}
+          onChange={(e) => setEsgotado(e.target.checked)}
+          className="h-4 w-4 rounded border-preto/30 text-bordo focus:ring-bordo"
+        />
+        <span>Marcar peça como esgotada</span>
+      </label>
+
+      <div className="flex flex-col gap-2">
+        <span className="text-sm font-medium text-preto/80">Fotos</span>
+        <span className="text-xs text-preto/50">
+          Selecione quantas quiser — clique no quadrado com “+” para adicionar
+          mais fotos.
         </span>
 
-        {(existingImages.length > 0 || newFiles.length > 0) && (
-          <div className="flex flex-wrap gap-2">
-            {existingImages.map((url) => (
-              <div
-                key={url}
-                className="relative h-20 w-20 overflow-hidden rounded-md bg-creme"
+        <div className="flex flex-wrap gap-3">
+          {existingImages.map((url) => (
+            <div
+              key={url}
+              className="relative h-20 w-20 overflow-hidden rounded-md bg-creme ring-1 ring-preto/10"
+            >
+              <Image
+                src={url}
+                alt="Foto da peça"
+                fill
+                className="object-cover"
+              />
+              <button
+                type="button"
+                onClick={() => removeExistingImage(url)}
+                aria-label="Remover foto"
+                className="absolute right-1 top-1 flex h-5 w-5 items-center justify-center rounded-full bg-preto/70 text-xs text-off-white transition-colors hover:bg-bordo"
               >
-                <Image
-                  src={url}
-                  alt="Foto da peça"
-                  fill
-                  className="object-cover"
-                />
-                <button
-                  type="button"
-                  onClick={() => removeExistingImage(url)}
-                  aria-label="Remover foto"
-                  className="absolute right-1 top-1 flex h-5 w-5 items-center justify-center rounded-full bg-preto/70 text-xs text-off-white"
-                >
-                  ×
-                </button>
-              </div>
-            ))}
-            {newPreviews.map((url, i) => (
-              <div
-                key={url}
-                className="relative h-20 w-20 overflow-hidden rounded-md bg-creme"
+                ×
+              </button>
+            </div>
+          ))}
+          {newPreviews.map((url, i) => (
+            <div
+              key={url}
+              className="relative h-20 w-20 overflow-hidden rounded-md bg-creme ring-1 ring-preto/10"
+            >
+              <Image src={url} alt="Nova foto" fill className="object-cover" />
+              <button
+                type="button"
+                onClick={() => removeNewFile(i)}
+                aria-label="Remover foto"
+                className="absolute right-1 top-1 flex h-5 w-5 items-center justify-center rounded-full bg-preto/70 text-xs text-off-white transition-colors hover:bg-bordo"
               >
-                <Image
-                  src={url}
-                  alt="Nova foto"
-                  fill
-                  className="object-cover"
-                />
-                <button
-                  type="button"
-                  onClick={() => removeNewFile(i)}
-                  aria-label="Remover foto"
-                  className="absolute right-1 top-1 flex h-5 w-5 items-center justify-center rounded-full bg-preto/70 text-xs text-off-white"
-                >
-                  ×
-                </button>
-              </div>
-            ))}
-          </div>
-        )}
+                ×
+              </button>
+            </div>
+          ))}
+
+          <button
+            type="button"
+            onClick={() => fileInputRef.current?.click()}
+            aria-label="Adicionar fotos"
+            className="flex h-20 w-20 flex-col items-center justify-center gap-1 rounded-md border-2 border-dashed border-preto/25 text-preto/40 transition-colors hover:border-bordo hover:text-bordo"
+          >
+            <span className="text-2xl leading-none">+</span>
+            <span className="text-[10px] font-medium uppercase tracking-wide">
+              Adicionar
+            </span>
+          </button>
+        </div>
 
         <input
-          id="imagens"
+          ref={fileInputRef}
           type="file"
           accept="image/png,image/jpeg,image/webp"
           multiple
-          onChange={(e) =>
-            setNewFiles((current) => [
-              ...current,
-              ...Array.from(e.target.files ?? []),
-            ])
-          }
-          className="rounded-md border border-preto/20 bg-white px-3 py-2 text-preto"
+          onChange={(e) => addFiles(e.target.files)}
+          className="hidden"
         />
       </div>
 
@@ -297,3 +338,4 @@ export default function ProductForm({
     </form>
   );
 }
+

@@ -56,7 +56,14 @@ export default function ProductList({
             </div>
 
             <div className="flex flex-1 flex-col">
-              <span className="font-medium text-preto">{product.nome}</span>
+              <span className="flex items-center gap-2 font-medium text-preto">
+                {product.nome}
+                {product.esgotado && (
+                  <span className="rounded-full bg-preto/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-preto/60">
+                    Esgotado
+                  </span>
+                )}
+              </span>
               <span className="text-xs uppercase tracking-wide text-preto/40">
                 {product.categoria} · {product.imagens.length}{" "}
                 {product.imagens.length === 1 ? "foto" : "fotos"}

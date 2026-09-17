@@ -55,6 +55,7 @@ export type ProductInput = {
   preco: number;
   categoria: Category;
   descricao?: string;
+  esgotado: boolean;
   imagens: string[];
 };
 

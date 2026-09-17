@@ -22,9 +22,17 @@ export default function ProductCard({
           src={product.imagens[activeImage] ?? product.imagens[0]}
           alt={product.nome}
           fill
-          className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+          className={`object-cover transition-transform duration-500 ease-out group-hover:scale-105 ${
+            product.esgotado ? "grayscale" : ""
+          }`}
           sizes="(min-width: 1024px) 25vw, (min-width: 640px) 33vw, 50vw"
         />
+
+        {product.esgotado && (
+          <span className="absolute left-2.5 top-2.5 rounded-full bg-preto/80 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-off-white">
+            Esgotado
+          </span>
+        )}
 
         <button
           type="button"
@@ -92,7 +100,17 @@ export default function ProductCard({
         </div>
 
         <div className="mt-auto pt-3">
-          <BuyDialog productName={product.nome} productPrice={preco} />
+          {product.esgotado ? (
+            <button
+              type="button"
+              disabled
+              className="w-full cursor-not-allowed rounded-full bg-preto/10 px-4 py-2.5 text-xs font-semibold uppercase tracking-wide text-preto/40"
+            >
+              Esgotado
+            </button>
+          ) : (
+            <BuyDialog productName={product.nome} productPrice={preco} />
+          )}
         </div>
       </div>
     </div>
